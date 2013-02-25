@@ -144,6 +144,8 @@ class Twitter{
 	/*
 	*
 	* Get the hourly rate limits and status
+	* This returns the limit and usage for all
+	* Twitter API methods available.
 	*
 	*/
 	private function getApplicationRateLimit()
@@ -153,6 +155,14 @@ class Twitter{
 		return $status;
 	}
 	
+	/*
+	*
+	* Linkify A tags and @ mentions in Tweets
+	* @param String $tweet - A text string to parse
+	*
+	* @return String $tweet - parsed and converted text
+	*
+	*/
 	private function render($tweet)
 	{
 		$tweet = preg_replace('/(https?:\/\/[^\s"<>]+)/','<a href="$1">$1</a>',$tweet);
