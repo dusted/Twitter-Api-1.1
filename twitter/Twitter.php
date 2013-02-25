@@ -1,7 +1,15 @@
 <?php 
 
 require_once('Codebird.php');
-
+/*
+*
+* Wrapper class for Twitter API
+* Uses Codebird for oAuth Authentication
+* and API CURL request.
+*
+* @author Ross Turner
+*
+*/
 class Twitter{
 	
 	//oAuth API
@@ -19,6 +27,11 @@ class Twitter{
 	*/
 	public function __construct($consumerKey,$consumerSecret,$accessToken,$accessSecret)
 	{
+		if(!function_exists('curl_version'))
+		{
+			echo "The CURL extension is required ";
+		}	
+
 		//setup cache
 		$this->user_timeline_cache = __DIR__ . $this->user_timeline_cache;
 		
