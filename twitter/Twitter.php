@@ -1,11 +1,15 @@
 <?php 
-
 require_once('Codebird.php');
 /*
 *
 * Wrapper class for Twitter API
 * Uses Codebird for oAuth Authentication
 * and API CURL request.
+*
+* Main tweet fields
+*
+* date  -  $tweet->created_at - formatted as a javascript date
+* tweet - $tweet->text - links and @mentions are already linkified
 *
 * @author Ross Turner
 *
@@ -33,7 +37,7 @@ class Twitter{
 		}	
 
 		//setup cache
-		$this->user_timeline_cache = __DIR__ . $this->user_timeline_cache;
+		$this->user_timeline_cache = dirname(__FILE__) . '/' .$this->user_timeline_cache;
 		
 		//setup Twitter API
 		Codebird::setConsumerKey($consumerKey,$consumerSecret);
@@ -59,7 +63,10 @@ class Twitter{
 			$tweets = array();
 			foreach($reply as $tweet)
 			{
-				$tweet->text = $this->render($tweet->text);
+				if($tweet->tweet)
+				{
+					$tweet->text = $this->render($tweet->text);
+				}
 				$tweets[] = (array)$tweet;
 			}
 			
@@ -80,6 +87,7 @@ class Twitter{
 					));
 				if($reply['httpstatus'] == 200)
 				{
+					unset($reply['httpstatus']);
 					//write to file
 					file_put_contents($this->user_timeline_cache,serialize($reply));
 				}
