@@ -63,10 +63,6 @@ class Twitter{
 			$tweets = array();
 			foreach($reply as $tweet)
 			{
-				if($tweet->tweet)
-				{
-					$tweet->text = $this->render($tweet->text);
-				}
 				$tweets[] = (array)$tweet;
 			}
 			
@@ -78,7 +74,7 @@ class Twitter{
 			$status = $this->getApplicationRatelimit();
 			$status = (array)$status['resources']->statuses;
 			$limit = $status["/statuses/user_timeline"]->remaining;
-			
+		
 			if($limit > 0)
 			{
 				$reply = (array)$this->codebird->statuses_userTimeline(array(
@@ -86,8 +82,22 @@ class Twitter{
 					'screen_name' => $screenname
 					));
 				if($reply['httpstatus'] == 200)
-				{
+				{	
+				
+					//get rid of the status so we dont loop over it later
 					unset($reply['httpstatus']);
+					
+					//linify text
+					foreach($reply as $tweet)
+					{
+						
+							if($tweet->text)
+							{
+								$tweet->text = $this->render($tweet->text);
+							}
+							
+					}
+					
 					//write to file
 					file_put_contents($this->user_timeline_cache,serialize($reply));
 				}
@@ -173,6 +183,7 @@ class Twitter{
 	*/
 	private function render($tweet)
 	{
+		
 		$tweet = preg_replace('/(https?:\/\/[^\s"<>]+)/','<a href="$1">$1</a>',$tweet);
 		$tweet = preg_replace('/(^|[\n\s])@([^\s\"\t\n\r<:]*)/is', '$1<a href="http://twitter.com/$2">@$2</a>', $tweet);
 		$tweet = preg_replace('/(^|[\n\s])#([^\s"\t\n\r<:]*)/is', '$1<a href="http://twitter.com/search?q=%23$2">#$2</a>', $tweet);
