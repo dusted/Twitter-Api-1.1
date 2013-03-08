@@ -48,13 +48,15 @@ class Twitter{
 	
 	/**
 	*
+	* @param String $screenname - screen name of user(must be public timeline)
 	* @param int $number - number of tweets to retrive
+	* @param Boolean $replies - include replies in the returned tweets
 	* @param Boolean $json - return as JSON array, defaults to PHP array
 	* 
 	* @return mixed $reply - PHP or JSON array of timeline tweets
 	*	
 	*/
-	public function getUserTimeline($screenname = 'dusteddesign', $number = 5, $json = false)
+	public function getUserTimeline($screenname = 'dusteddesign', $number = 5, $replies = false, $json = false)
 	{
 		$reply = array();
 		
@@ -79,7 +81,8 @@ class Twitter{
 			{
 				$reply = (array)$this->codebird->statuses_userTimeline(array(
 					'count' => $number,
-					'screen_name' => $screenname
+					'screen_name' => $screenname,
+					'exclude_replies' => !$replies
 					));
 				if($reply['httpstatus'] == 200)
 				{	
