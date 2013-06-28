@@ -19,7 +19,7 @@ class Twitter{
 	//oAuth API
 	private $codebird = null;
 	//local file cache for user timeline
-	private $user_timeline_cache = '/user_timeline_cache.txt';
+	private $user_timeline_cache = 'user_timeline_cache.txt';
 	
 	/**
 	*
